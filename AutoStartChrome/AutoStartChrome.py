@@ -1,30 +1,26 @@
 import os
 import subprocess
-import winreg
 
-def set_registry_key(key_path, value_name, value):
-    try:
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_ALL_ACCESS)
-        winreg.SetValueEx(key, value_name, 0, winreg.REG_SZ, value)
-        winreg.CloseKey(key)
-    except WindowsError:
-        pass
+def open_chrome_with_website():
+    chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    website_url = "https://studio.youtube.com/video/2ohbhwJ2hCA/livestreaming"
+    
+    # Check if Chrome is already running
+    if not is_chrome_running():
+        # Launch Chrome with the specified website
+        subprocess.Popen([chrome_path, website_url])
+    else:
+        print("Google Chrome is already running.")
 
-def create_startup_entry():
-    startup_folder = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
-    shortcut_path = os.path.join(startup_folder, 'Google Chrome.lnk')
-    target_path = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
-    arguments = 'https://studio.youtube.com/video/2ohbhwJ2hCA/livestreaming'
+def is_chrome_running():
+    # Get the list of running processes
+    process_list = os.popen('tasklist').read().lower()
+    
+    # Check if "chrome.exe" is present in the process list
+    if "chrome.exe" in process_list:
+        return True
+    else:
+        return False
 
-    with open(shortcut_path, 'w') as shortcut_file:
-        shortcut_file.write('[InternetShortcut]\n')
-        shortcut_file.write('URL=' + arguments + '\n')
-        shortcut_file.write('IconIndex=0\n')
-        shortcut_file.write('IconFile=' + target_path + '\n')
-
-def main():
-    set_registry_key('Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', 'Hidden', '0')
-    create_startup_entry()
-
-if __name__ == '__main__':
-    main()
+# Run the function to open Google Chrome with the specified website
+open_chrome_with_website()
