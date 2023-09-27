@@ -20,4 +20,4 @@ else:
     print("Google Chrome nem található a megadott elérési úton.")
 
 # Várunk egy rövid ideig (pl. 5 másodperc) a weboldal betöltésére
-time.sleep(5)
+time.sleep(0)
